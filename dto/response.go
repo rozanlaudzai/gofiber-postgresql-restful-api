@@ -6,6 +6,14 @@ type Response[T any] struct {
 	Data    T      `json:"data"`
 }
 
+func CreateResponseSuccess[T any](data T) Response[T] {
+	return Response[T]{
+		Code:    "00",
+		Message: "success",
+		Data:    data,
+	}
+}
+
 func CreateResponseError(message string) Response[string] {
 	return Response[string]{
 		Code:    "99",
@@ -14,10 +22,10 @@ func CreateResponseError(message string) Response[string] {
 	}
 }
 
-func CreateResponseSuccess[T any](data T) Response[T] {
-	return Response[T]{
-		Code:    "00",
-		Message: "success",
+func CreateResponseErrorData(message string, data map[string]string) Response[map[string]string] {
+	return Response[map[string]string]{
+		Code:    "99",
+		Message: message,
 		Data:    data,
 	}
 }

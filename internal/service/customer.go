@@ -2,7 +2,10 @@ package service
 
 import (
 	"context"
+	"database/sql"
+	"time"
 
+	"github.com/google/uuid"
 	"github.com/rozanlaudzai/gofiber-postgresql-restful-api/domain"
 	"github.com/rozanlaudzai/gofiber-postgresql-restful-api/dto"
 )
@@ -31,4 +34,14 @@ func (cs *customerService) Index(ctx context.Context) ([]dto.CustomerData, error
 		})
 	}
 	return customerData, nil
+}
+
+func (cs *customerService) Create(ctx context.Context, req dto.CreateCustomerRequest) error {
+	customer := &domain.Customer{
+		ID:        uuid.NewString(),
+		Code:      req.Code,
+		Name:      req.Name,
+		CreatedAt: sql.NullTime{Time: time.Now(), Valid: true},
+	}
+	return cs.customerRepository.Save(ctx, customer)
 }
