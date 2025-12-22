@@ -1,0 +1,12 @@
+# GoFiber-PostgreSQL RESTful API
+
+## Environment Variables
+
+- SERVER_HOST
+- SERVER_PORT
+- DB_HOST
+- DB_PORT
+- DB_USER
+- DB_PASSWORD
+- DB_TIMEZONE
+- DB_NAME
