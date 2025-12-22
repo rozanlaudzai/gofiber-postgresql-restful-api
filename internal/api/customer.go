@@ -21,6 +21,7 @@ func NewCustomer(app *fiber.App, customerService domain.CustomerService) {
 	}
 	app.Get("/customers", ca.Index)
 	app.Post("/customers", ca.Create)
+	app.Put("/customers/:id", ca.Update)
 }
 
 func (ca *customerApi) Index(fCtx *fiber.Ctx) error {
@@ -55,5 +56,29 @@ func (ca *customerApi) Create(fCtx *fiber.Ctx) error {
 			JSON(dto.CreateResponseError(err.Error()))
 	}
 	return fCtx.Status(http.StatusCreated).
+		JSON(dto.CreateResponseSuccess(""))
+}
+
+func (ca *customerApi) Update(fCtx *fiber.Ctx) error {
+	ctx, cancel := context.WithTimeout(fCtx.Context(), 10*time.Second)
+	defer cancel()
+
+	var req dto.UpdateCustomerRequest
+	if err := fCtx.BodyParser(&req); err != nil {
+		return fCtx.SendStatus(http.StatusUnprocessableEntity)
+	}
+	fails := util.Validate(req)
+	if len(fails) > 0 {
+		return fCtx.Status(http.StatusBadRequest).
+			JSON(dto.CreateResponseErrorData("validation error", fails))
+	}
+
+	req.ID = fCtx.Params("id")
+	err := ca.customerService.Update(ctx, req)
+	if err != nil {
+		return fCtx.Status(http.StatusInternalServerError).
+			JSON(dto.CreateResponseError(err.Error()))
+	}
+	return fCtx.Status(http.StatusOK).
 		JSON(dto.CreateResponseSuccess(""))
 }

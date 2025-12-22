@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"time"
 
 	"github.com/google/uuid"
@@ -37,11 +38,22 @@ func (cs *customerService) Index(ctx context.Context) ([]dto.CustomerData, error
 }
 
 func (cs *customerService) Create(ctx context.Context, req dto.CreateCustomerRequest) error {
-	customer := &domain.Customer{
+	customer := domain.Customer{
 		ID:        uuid.NewString(),
 		Code:      req.Code,
 		Name:      req.Name,
 		CreatedAt: sql.NullTime{Time: time.Now(), Valid: true},
 	}
-	return cs.customerRepository.Save(ctx, customer)
+	return cs.customerRepository.Save(ctx, &customer)
+}
+
+func (cs *customerService) Update(ctx context.Context, req dto.UpdateCustomerRequest) error {
+	persisted, err := cs.customerRepository.FindById(ctx, req.ID)
+	if err != nil || persisted.ID == "" {
+		return errors.New("customer was not found")
+	}
+	persisted.Code = req.Code
+	persisted.Name = req.Name
+	persisted.UpdatedAt = sql.NullTime{Time: time.Now(), Valid: true}
+	return cs.customerRepository.Update(ctx, &persisted)
 }
