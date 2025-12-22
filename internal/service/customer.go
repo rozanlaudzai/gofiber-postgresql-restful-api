@@ -22,7 +22,6 @@ func (cs *customerService) Index(ctx context.Context) ([]dto.CustomerData, error
 	if err != nil {
 		return nil, err
 	}
-
 	var customerData []dto.CustomerData
 	for _, customer := range customers {
 		customerData = append(customerData, dto.CustomerData{
@@ -31,6 +30,5 @@ func (cs *customerService) Index(ctx context.Context) ([]dto.CustomerData, error
 			Name: customer.Name,
 		})
 	}
-
 	return customerData, nil
 }

@@ -8,3 +8,10 @@ CREATE TABLE customer (
     updated_at TIMESTAMPTZ,
     deleted_at TIMESTAMPTZ
 );
+
+SELECT * FROM customer;
+
+INSERT INTO customer (code, name)
+VALUES ('M-0001', 'Naruto Uzumaki'),
+       ('M-0002', 'Sasuke Uchiha'),
+       ('M-0003', 'Sakura Haruno');

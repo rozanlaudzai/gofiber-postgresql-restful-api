@@ -21,15 +21,15 @@ func NewCustomer(app *fiber.App, customerService domain.CustomerService) {
 	app.Get("/customers", ca.Index)
 }
 
-func (ca *customerApi) Index(fiberCtx *fiber.Ctx) error {
-	ctx, cancel := context.WithTimeout(fiberCtx.Context(), 10*time.Second)
+func (ca *customerApi) Index(fCtx *fiber.Ctx) error {
+	ctx, cancel := context.WithTimeout(fCtx.Context(), 10*time.Second)
 	defer cancel()
 
 	customerData, err := ca.customerService.Index(ctx)
 	if err != nil {
-		return fiberCtx.Status(http.StatusInternalServerError).
+		return fCtx.Status(http.StatusInternalServerError).
 			JSON(dto.CreateResponseError(err.Error()))
 	}
 
-	return fiberCtx.JSON(dto.CreateResponseSuccess(customerData))
+	return fCtx.JSON(dto.CreateResponseSuccess(customerData))
 }

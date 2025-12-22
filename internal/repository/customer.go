@@ -26,10 +26,8 @@ func (cr *customerRepository) FindAll(ctx context.Context) (result []domain.Cust
 }
 
 func (cr *customerRepository) FindById(ctx context.Context, id string) (result domain.Customer, err error) {
-	dataset := cr.db.From("customer").Where(
-		goqu.C("deleted_at").IsNull(),
-		goqu.C("id").Eq(id),
-	)
+	dataset := cr.db.From("customer").
+		Where(goqu.C("deleted_at").IsNull(), goqu.C("id").Eq(id))
 	_, err = dataset.ScanStructContext(ctx, &result)
 	return
 }
@@ -41,7 +39,9 @@ func (cr *customerRepository) Save(ctx context.Context, c *domain.Customer) erro
 }
 
 func (cr *customerRepository) Update(ctx context.Context, c *domain.Customer) error {
-	executor := cr.db.Update("customer").Where(goqu.C("id").Eq(c.ID)).Set(c).Executor()
+	executor := cr.db.Update("customer").
+		Where(goqu.C("id").Eq(c.ID)).
+		Set(c).Executor()
 	_, err := executor.ExecContext(ctx)
 	return err
 }
