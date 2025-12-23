@@ -65,3 +65,15 @@ func (cs *customerService) Delete(ctx context.Context, id string) error {
 	}
 	return cs.customerRepository.Delete(ctx, id)
 }
+
+func (cs *customerService) Show(ctx context.Context, id string) (dto.CustomerData, error) {
+	persisted, err := cs.customerRepository.FindById(ctx, id)
+	if err != nil || persisted.ID == "" {
+		return dto.CustomerData{}, errors.New("customer was not found")
+	}
+	return dto.CustomerData{
+		ID:   id,
+		Code: persisted.Code,
+		Name: persisted.Name,
+	}, nil
+}
