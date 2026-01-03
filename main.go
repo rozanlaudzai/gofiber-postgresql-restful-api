@@ -24,12 +24,15 @@ func main() {
 	}
 
 	customerRepository := repository.NewCustomer(dbConn)
+	userRepository := repository.NewUser(dbConn)
 
 	customerService := service.NewCustomer(customerRepository)
+	authService := service.NewAuth(config, userRepository)
 
 	app := fiber.New()
 
 	api.NewCustomer(app, customerService)
+	api.NewAuth(app, authService)
 
 	addr := fmt.Sprintf("%v:%v", config.Server.Host, config.Server.Port)
 	if err = app.Listen(addr); err != nil {

@@ -10,7 +10,7 @@ CREATE TABLE customer (
 );
 
 SELECT * FROM customer;
-
+SELECT name FROM customer WHERE code='M-0001';
 INSERT INTO customer (code, name)
 VALUES ('M-0001', 'Naruto Uzumaki'),
        ('M-0002', 'Sasuke Uchiha'),

@@ -49,7 +49,7 @@ func (cs *customerService) Create(ctx context.Context, req dto.CreateCustomerReq
 
 func (cs *customerService) Update(ctx context.Context, req dto.UpdateCustomerRequest) error {
 	persisted, err := cs.customerRepository.FindById(ctx, req.ID)
-	if err != nil || persisted.ID == "" {
+	if err != nil {
 		return errors.New("customer was not found")
 	}
 	persisted.Code = req.Code
@@ -59,8 +59,8 @@ func (cs *customerService) Update(ctx context.Context, req dto.UpdateCustomerReq
 }
 
 func (cs *customerService) Delete(ctx context.Context, id string) error {
-	exist, err := cs.customerRepository.FindById(ctx, id)
-	if err != nil || exist.ID == "" {
+	_, err := cs.customerRepository.FindById(ctx, id)
+	if err != nil {
 		return errors.New("customer was not found")
 	}
 	return cs.customerRepository.Delete(ctx, id)
@@ -68,7 +68,7 @@ func (cs *customerService) Delete(ctx context.Context, id string) error {
 
 func (cs *customerService) Show(ctx context.Context, id string) (dto.CustomerData, error) {
 	persisted, err := cs.customerRepository.FindById(ctx, id)
-	if err != nil || persisted.ID == "" {
+	if err != nil {
 		return dto.CustomerData{}, errors.New("customer was not found")
 	}
 	return dto.CustomerData{

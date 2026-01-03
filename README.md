@@ -10,3 +10,5 @@
 - DB_PASSWORD
 - DB_TIMEZONE
 - DB_NAME
+- JWT_KEY
+- JWT_EXPIRED (in minutes)
